@@ -1,15 +1,5 @@
 // Source code for Project: Library project
 
-/* Algorithm: 
-1. User enters book info and hits submit button
-2. Program collects book data from text fields
-3. Book factory is called and a new book object is created from data
-4. Library module is called and Book object is stored in its memory
-5. Library module then creates new card (html container for book) 
-   using book properties.
-6. 
-*/
-
 
 // Book Factory
 const bookFactory = (title, author, pages, read) => {
@@ -59,7 +49,7 @@ const library = (() => {
 
         // Book: Author
         const cardAuthor = document.createElement('p');
-        cardAuthor.innerText = `Author: ${book.author}`;
+        cardAuthor.innerText = `By ${book.author}`;
         cardAuthor.id = "card-author";
         cardAuthor.classList.add("card-author");
 
@@ -187,6 +177,15 @@ submitBtn.addEventListener('click', () => {
     const pages = document.getElementById('pages');
     const read = document.getElementById('read-status');
 
+    // Validate entries
+    if (title.value === "" ||
+        author.value === "" ||
+        pages.value === "") {
+            alert("Invalid entry detected!\n" +
+            "Please make sure Title, Author, and Pages fields are not blank.");
+            return;
+        }
+
     library.addBook(bookFactory(title.value, author.value, pages.value, read.checked));
 
     // Reset input fields
@@ -195,3 +194,36 @@ submitBtn.addEventListener('click', () => {
     pages.value = '';
     read.checked = false;
 });
+
+/************ LOCAL STORAGE *************/
+
+// Check if container data is present already
+function containerMemory() {
+    if(!localStorage.getItem('containerData')) {
+      // Data not present, save current people
+      setPeople();
+    } else {
+      // Data is present, update current settings
+      getPeople();
+    }
+  }
+  
+  
+  // Save all current people in container
+  function setPeople() {
+    
+    localStorage.setItem('containerData', document.getElementById('container').innerHTML);
+  
+    getPeople(); // Update container
+  }
+  
+  
+  // Update container to include all people found in storage
+  function getPeople() {
+    // Retrieve saved people from container
+    let savedPeople = localStorage.getItem("containerData");
+    // Update container
+    document.getElementById('container').innerHTML = savedPeople;
+  }
+  
+  
